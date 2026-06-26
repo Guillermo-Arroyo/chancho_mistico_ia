@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🐷 El Oráculo del Chancho Místico</title>
+    <style>
+        /* ===== ESTILOS GENERALES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #1a0e0b 0%, #2d1810 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: linear-gradient(180deg, #3d231b, #2a1610);
+            border-radius: 60px 60px 40px 40px;
+            padding: 30px 25px 40px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 0 0 2px #6b3f2e, inset 0 0 20px #ac6b4f;
+            border: 4px solid #7a4d38;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f7e3c0;
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-shadow: 0 4px 0 #4f2e1e, 0 8px 12px rgba(0,0,0,0.6);
+            letter-spacing: 2px;
+        }
+        h1 small {
+            display: block;
+            font-size: 0.8rem;
+            color: #dbbd94;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-top: 2px;
+            text-shadow: 0 2px 0 #3d2014;
+        }
+
+        /* ===== CHANCHO ===== */
+        .chancho-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0 10px;
+            position: relative;
+        }
+
+        .chancho {
+            font-size: 120px;
+            line-height: 1;
+            filter: drop-shadow(0 12px 0 #3d1f14) drop-shadow(0 20px 20px rgba(0,0,0,0.5));
+            background: radial-gradient(circle at 30% 30%, #f7b28c, #d47a5a);
+            border-radius: 50%;
+            padding: 25px 35px 15px 35px;
+            border: 6px solid #a56548;
+            box-shadow: inset 0 -10px 0 #7a4a33, inset 0 10px 20px #ffd9b0;
+            transform: rotate(-2deg);
+            transition: 0.2s;
+            cursor: default;
+            animation: flotar 3s ease-in-out infinite;
+            user-select: none;
+        }
+
+        @keyframes flotar {
+            0% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(-2deg); }
+        }
+
+        .gloria {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,120,0.15) 0%, transparent 70%);
+            pointer-events: none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulsar 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulsar {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.3; }
+        }
+
+        /* ===== DADO ANIMADO ===== */
+        .dado-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px 0 10px;
+            min-height: 70px;
+        }
+
+        .dado-grande {
+            font-size: 60px;
+            background: #1f110c;
+            padding: 8px 24px;
+            border-radius: 20px;
+            border: 4px solid #7a4d38;
+            box-shadow: inset 0 0 20px #0a0604, 0 6px 0 #3d2014;
+            display: inline-block;
+            transition: 0.1s;
+            color: #f7e3c0;
+            font-weight: 900;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .dado-girando {
+            animation: girarDado 0.15s infinite alternate;
+        }
+
+        @keyframes girarDado {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            75% { transform: rotate(270deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        /* ===== RESPUESTA ===== */
+        .respuesta-box {
+            background: #1f110c;
+            border-radius: 40px;
+            padding: 20px 18px;
+            margin: 12px 0 18px;
+            border: 3px solid #7a4d38;
+            box-shadow: inset 0 0 30px #0a0604, 0 8px 0 #3d2014;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #respuesta {
+            color: #f7e3c0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1.5;
+            text-shadow: 0 2px 4px #00000080;
+            transition: 0.3s;
+            word-break: break-word;
+        }
+
+        /* ===== INPUT Y BOTONES ===== */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #preguntaInput {
+            flex: 1;
+            padding: 16px 18px;
+            border: none;
+            border-radius: 60px;
+            background: #2f1a12;
+            color: #f7e3c0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            outline: 3px solid #5d3828;
+            box-shadow: inset 0 4px 8px #0d0704;
+            transition: 0.2s;
+            min-width: 150px;
+        }
+
+        #preguntaInput:focus {
+            outline: 3px solid #c2825e;
+            background: #3d241b;
+        }
+
+        #preguntaInput::placeholder {
+            color: #9a7a66;
+            font-weight: 300;
+        }
+
+        .btn {
+            padding: 16px 28px;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 6px 0 #2d1610, 0 8px 16px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            color: #1f0d07;
+            background: #ecb58a;
+            border: 2px solid #fad6b0;
+            text-shadow: 0 1px 0 #ffddbb;
+            flex: 0 0 auto;
+        }
+
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 1px 0 #2d1610;
+        }
+
+        .btn:hover {
+            background: #f7c69e;
+            transform: scale(1.02);
+        }
+
+        .btn-secundario {
+            background: #7a5a48;
+            border-color: #ae8a74;
+            color: #f7e3c0;
+            text-shadow: 0 1px 0 #3d2b1f;
+            box-shadow: 0 6px 0 #3d241b;
+        }
+
+        .btn-secundario:hover {
+            background: #946f5a;
+        }
+
+        /* ===== BOTÓN DE AYUDA ===== */
+        .snack-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-ayuda {
+            background: #4a2f22;
+            border: 2px solid #8a6a55;
+            color: #f7e3c0;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 0 #2d1610;
+        }
+
+        .btn-ayuda:hover {
+            background: #6b4a38;
+            transform: scale(1.1);
+        }
+
+        .btn-ayuda:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #2d1610;
+        }
+
+        /* ===== GUÍA FLOTANTE ===== */
+        .guia-snack {
+            display: none;
+            background: #1f110c;
+            border: 3px solid #c2825e;
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin: 10px 0 5px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.8), inset 0 0 30px #0a0604;
+            color: #f7e3c0;
+            animation: aparecerGuia 0.3s ease-out;
+        }
+
+        .guia-snack.visible {
+            display: block;
+        }
+
+        @keyframes aparecerGuia {
+            0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .guia-snack h3 {
+            color: #f7dcc0;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guia-snack ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0;
+        }
+
+        .guia-snack li {
+            padding: 6px 0;
+            border-bottom: 1px solid #3d241b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guia-snack li:last-child {
+            border-bottom: none;
+        }
+
+        .guia-snack .ejemplo {
+            background: #2d1810;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            color: #ffdbb5;
+            border: 1px solid #5d3828;
+        }
+
+        .guia-snack .icono-ejemplo {
+            font-size: 1.5rem;
+        }
+
+        .guia-snack .paso {
+            background: #3d241b;
+            padding: 8px 14px;
+            border-radius: 12px;
+            margin: 8px 0;
+            border-left: 4px solid #c2825e;
+            color: #ffdbb5;
+        }
+
+        .guia-snack .cerrar-guia {
+            background: #5d3828;
+            border: none;
+            color: #f7e3c0;
+            padding: 4px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+
+        .guia-snack .cerrar-guia:hover {
+            background: #7a4d38;
+        }
+
+        .estado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 18px 5px 0;
+            color: #bb9a82;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            border-top: 2px dashed #5d3828;
+            padding-top: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .estado span {
+            background: #1f110c;
+            padding: 6px 16px;
+            border-radius: 40px;
+            border: 2px solid #5d3828;
+            color: #f7dcc0;
+        }
+
+        .indicador-snack {
+            background: #2d1810;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            color: #bb9a82;
+            border: 1px solid #5d3828;
+        }
+
+        .badge-ofensivo {
+            background: #4a1a1a;
+            color: #ff6b6b;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border: 1px solid #8a3333;
+            margin-left: 6px;
+        }
+
+        @media (max-width: 500px) {
+            h1 { font-size: 1.6rem; }
+            .chancho { font-size: 80px; padding: 15px 20px 10px; }
+            .dado-grande { font-size: 40px; min-width: 60px; padding: 6px 16px; }
+            .respuesta-box { min-height: 70px; padding: 14px; }
+            #respuesta { font-size: 1.1rem; }
+            .btn { padding: 12px 18px; font-size: 1rem; }
+            #preguntaInput { padding: 12px 14px; font-size: 1rem; }
+            .guia-snack { padding: 14px; }
+            .guia-snack h3 { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>
+        🐷 ORÁCULO DEL CHANCHO
+        <small>〰️ MÍSTICO 〰️</small>
+    </h1>
+
+    <div class="chancho-wrapper">
+        <div class="gloria"></div>
+        <div class="chancho" id="chanchoEmoji">🐖</div>
+    </div>
+
+    <!-- DADO ANIMADO -->
+    <div class="dado-container">
+        <div class="dado-grande" id="dadoDisplay">🎲</div>
+    </div>
+
+    <div class="respuesta-box">
+        <div id="respuesta">✨ Pregúntame algo, humano...</div>
+    </div>
+
+    <div class="input-area">
+        <!-- INPUT PRINCIPAL + BOTÓN PREGUNTAR -->
+        <div class="input-row">
+            <input type="text" id="preguntaInput" placeholder="Escribe tu pregunta o palabra mágica..." />
+            <button class="btn" id="btnPreguntar">🔮 PREGUNTAR</button>
+        </div>
+        
+        <!-- BOTONES SECUNDARIOS -->
+        <div class="input-row" style="justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <div class="snack-wrapper">
+                <button class="btn btn-secundario" id="btnSnack">🍕 SNACK</button>
+                <button class="btn-ayuda" id="btnAyudaSnack" title="¿Cómo funciona el SNACK?">❓</button>
+                <span class="indicador-snack">📝 Escribe en el cuadro ↑</span>
+            </div>
+            <button class="btn btn-secundario" id="btnEdad">🎂 ADIVINA MI EDAD</button>
+        </div>
+
+        <!-- GUÍA DEL SNACK -->
+        <div class="guia-snack" id="guiaSnack">
+            <h3>🍕 ¿Cómo funciona el botón SNACK?</h3>
+            
+            <div class="paso">
+                <strong>📝 PASO 1:</strong> Escribe una palabra en el <strong>cuadro de texto de arriba</strong> 
+                (el mismo donde escribes las preguntas).
+            </div>
+            <div class="paso">
+                <strong>👉 PASO 2:</strong> Haz clic en el botón <strong>"🍕 SNACK"</strong> 
+                (no en "PREGUNTAR").
+            </div>
+            <div class="paso">
+                <strong>✨ PASO 3:</strong> ¡El chancho te dará un horóscopo personalizado!
+            </div>
+
+            <p style="margin: 12px 0 8px; color: #dbbd94;">
+                <strong>Palabras mágicas que funcionan:</strong>
+            </p>
+            <ul>
+                <li><span class="icono-ejemplo">🍕</span> <span class="ejemplo">pizza</span> → Suerte culinaria</li>
+                <li><span class="icono-ejemplo">❤️</span> <span class="ejemplo">amor</span> → Consejo romántico</li>
+                <li><span class="icono-ejemplo">💰</span> <span class="ejemplo">dinero</span> → Futuro financiero</li>
+                <li><span class="icono-ejemplo">✈️</span> <span class="ejemplo">viaje</span> → Pronóstico aventurero</li>
+                <li><span class="icono-ejemplo">😢</span> <span class="ejemplo">tristeza</span> → Ánimo místico</li>
+                <li><span class="icono-ejemplo">🥔</span> <span class="ejemplo">patata</span> → Poder de la papa</li>
+                <li><span class="icono-ejemplo">💼</span> <span class="ejemplo">trabajo</span> → Consejo laboral</li>
+                <li><span class="icono-ejemplo">🐷</span> <span class="ejemplo">chancho</span> o <span class="ejemplo">cerdo</span> → Respuesta especial</li>
+            </ul>
+            <p style="margin-top: 10px; color: #bb9a82; font-size: 0.9rem; font-style: italic;">
+                ⭐ ¡Cualquier otra palabra también funciona! El chancho improvisará.
+            </p>
+            <button class="cerrar-guia" id="cerrarGuia">✖ Entendido</button>
+        </div>
+    </div>
+
+    <div class="estado">
+        <span id="contadorPreguntas">🐽 0 preguntas</span>
+        <span id="ultimoDado">🎲 Dado: -</span>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    //  🐷  EL ORÁCULO DEL CHANCHO MÍSTICO - CON RESPUESTAS PICANTES
+    // ============================================================
+
+    // -------- ELEMENTOS DOM --------
+    const respuestaEl = document.getElementById('respuesta');
+    const inputPregunta = document.getElementById('preguntaInput');
+    const btnPreguntar = document.getElementById('btnPreguntar');
+    const btnSnack = document.getElementById('btnSnack');
+    const btnEdad = document.getElementById('btnEdad');
+    const contadorSpan = document.getElementById('contadorPreguntas');
+    const dadoSpan = document.getElementById('ultimoDado');
+    const dadoDisplay = document.getElementById('dadoDisplay');
+    const chancho = document.getElementById('chanchoEmoji');
+    const guiaSnack = document.getElementById('guiaSnack');
+    const btnAyudaSnack = document.getElementById('btnAyudaSnack');
+    const cerrarGuia = document.getElementById('cerrarGuia');
+
+    // -------- ESTADO --------
+    let contador = 0;
+    let ultimoDado = null;
+    let animacionDadoActiva = false;
+
+    // ============================================================
+    //  🎭 RESPUESTAS PICANTES Y OFENSIVAS (pero graciosas)
+    // ============================================================
+    const respuestas = [
+        // Respuestas positivas (índices pares)
+        "El cosmos dice SÍ, pero tu nevera dice NO. Ve a comer algo, gordito.",
+        "La respuesta está en tu ombligo. Límpialo y vuelve a preguntar, puerca.",
+        "Definitivamente SÍ. Pero no hoy. Ni mañana. Ni nunca. Pero con actitud, campeón.",
+        "El chancho ha hablado: compra un sombrero. Eso arreglará todo... y tu cara también.",
+        "Sí, pero tendrás que cambiar tu nombre a 'Rodolfo' para que funcione. O a 'Pancracio'.",
+        "El chancho dice SÍ... pero también dice que deberías bañarte más seguido.",
+        "¡SÍ! Y el chancho te recomienda dejar de preguntar tonterías. Pero SÍ.",
+        "El universo aprueba tu pregunta. Tu jefe no, pero el universo sí.",
+        
+        // Respuestas negativas/ácidas (índices impares)
+        "NO. Y además, el chancho te juzga silenciosamente por hacer esa pregunta.",
+        "Estadísticamente, 1 de cada 3 personas hace esta pregunta. Eres básico. Muy básico.",
+        "El chancho giró su cola y dijo: 'Pregúntame otra cosa, pero con más estilo... y menos desesperación'.",
+        "No puedo decirlo, me pagan por no dar respuestas útiles. Pero la respuesta es NO.",
+        "NO. Y el chancho se pregunta cómo llegaste tan lejos en la vida con esa pregunta.",
+        "El chancho dice que NO, pero que tampoco te hagas ilusiones con el SÍ.",
+        "NO rotundo. El chancho ha visto mejores preguntas en un cubo de basura.",
+        "Definitivamente NO. Y tu pregunta ofendió al chancho. Pide disculpas.",
+        
+        // Respuestas absurdas/neutras
+        "El chancho no entiende tu pregunta, pero te recomienda comer menos carbohidratos.",
+        "Tu pregunta es tan confusa como tu vida amorosa. El chancho lo sabe todo.",
+        "El chancho ha decidido ignorar tu pregunta y en su lugar te recomienda un buen psicólogo.",
+        "La respuesta es 42. Pero no a tu pregunta. A la vida en general. De nada.",
+        "El chancho te ve, te juzga y te dice: 'mejor pregúntale a tu mamá'.",
+        "Tu pregunta es tan mala que el chancho pidió un reembolso del tiempo perdido.",
+        "El chancho no tiene respuesta, pero tiene hambre. ¿Me das un snack?",
+        "¿Eso es una pregunta o un grito de ayuda? El chancho no sabe, pero te quiere."
+    ];
+
+    // ============================================================
+    //  🍕 SNACKS MEJORADOS (con respuestas más picantes)
+    // ============================================================
+    const snacks = [
+        { 
+            palabra: 'pizza', 
+            texto: '🍕 Hoy la pizza te acompaña en la sombra. Cuidado con los bordes quemados... como tu cerebro. La suerte viene con pepperoni y mala decisión.' 
+        },
+        { 
+            palabra: 'tristeza', 
+            texto: '😢 La tristeza es como un globo: si lo pinchas con una sonrisa, explota. El chancho recomienda bailar feo y sin vergüenza, que para eso estás solo.' 
+        },
+        { 
+            palabra: 'patata', 
+            texto: '🥔 La patata te observa desde el suelo. Hoy es buen día para ser frito, pero con dignidad... o como puedas, total, nadie te ve.' 
+        },
+        { 
+            palabra: 'amor', 
+            texto: '❤️ El amor es como un chancho: gruñe, pero al final da calor. Ve y dale un abrazo a alguien (o a un cerdo), que tú no estás para elegir.' 
+        },
+        { 
+            palabra: 'dinero', 
+            texto: '💰 El dinero no da la felicidad, pero compra snacks. Y el chancho ama los snacks. Conclusión: eres pobre y el chancho lo sabe. Ve por más.' 
+        },
+        { 
+            palabra: 'trabajo', 
+            texto: '💼 El trabajo es temporal, el chancho es eterno. Haz pausas cada 20 min para mirar memes... total, tu jefe ya sabe que no produces nada.' 
+        },
+        { 
+            palabra: 'viaje', 
+            texto: '✈️ Viajar es bueno, pero ningún destino supera la panza del chancho. Llévale un souvenir... o mejor, llévate a ti mismo a otro lado.' 
+        },
+        { 
+            palabra: 'chancho', 
+            texto: '🐷 Te han invocado, humano. El chancho te observa con aprobación. Eres digno... digno de lástima, pero digno al fin.' 
+        },
+        { 
+            palabra: 'cerdo', 
+            texto: '🐽 Ah, un clásico. El cerdo te sonríe desde el más allá del tocino. Y te dice: "Deja de preguntar y ve a comer algo"' 
+        },
+        { 
+            palabra: 'cara', 
+            texto: '👀 Tu cara es un misterio para el chancho. Pero no te preocupes, el chancho ha visto cosas peores (en el espejo).' 
+        },
+        { 
+            palabra: 'vida', 
+            texto: '🌱 La vida es como un cerdo: a veces te da tocino, a veces te da un codazo. Hoy te toca codazo. Disfruta.' 
+        }
+    ];
+
+    // ============================================================
+    //  😂 CHISTES BONUS (más ácidos)
+    // ============================================================
+    const chistesBonus = [
+        ' 🤡 (Bonus: ¿Sabías que el chancho le ganó al ajedrez a una gallina? Fue por jaque mate con pechuga. Y la gallina sigue llorando.)',
+        ' 🐣 (Bonus: El chancho intentó volar, pero solo logró roncar más fuerte. Como tú con tus sueños.)',
+        ' 🥓 (Bonus: La vida es como el tocino: crujiente pero corta. ¡Disfruta mientras puedas, que luego te fríen!)',
+        ' 🎭 (Bonus: Un chancho entró a un bar y el bartender le dijo: "¿Qué deseas?" y el chancho dijo: "¡Una respuesta digna!"... y el bartender se rió y le dijo "¡Buena suerte!")',
+        ' 💀 (Bonus: El chancho tiene un mensaje para ti: "Eres tan predecible que hasta mi comida te imita.")',
+        ' 🔥 (Bonus: El chancho dijo: "Tu pregunta es tan mala que hasta mi sombra se fue a tomar un café.")',
+        ' 😎 (Bonus: El chancho te recomienda dejar de preguntar y empezar a hacer... algo, lo que sea, pero haz algo.)',
+        ' 🐽 (Bonus: El chancho se ríe de ti. Pero con cariño. O no. Quién sabe.)'
+    ];
+
+    // -------- FUNCIÓN PARA ANIMAR EL DADO --------
+    function animarDado(callback) {
+        if (animacionDadoActiva) return;
+        animacionDadoActiva = true;
+
+        const carasDado = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        let vueltas = 0;
+        const maxVueltas = 12;
+        const intervalo = 100;
+
+        const intervalId = setInterval(() => {
+            const caraAleatoria = carasDado[Math.floor(Math.random() * carasDado.length)];
+            dadoDisplay.textContent = caraAleatoria;
+            dadoDisplay.classList.add('dado-girando');
+            vueltas++;
+
+            if (vueltas >= maxVueltas) {
+                clearInterval(intervalId);
+                dadoDisplay.classList.remove('dado-girando');
+                animacionDadoActiva = false;
+                if (callback) callback();
+            }
+        }, intervalo);
+    }
+
+    // -------- FUNCIÓN PARA ACTUALIZAR DADO FINAL --------
+    function mostrarDadoFinal(valor) {
+        const carasDado = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        dadoDisplay.textContent = carasDado[valor - 1] || '🎲';
+        ultimoDado = valor;
+        dadoSpan.textContent = `🎲 Dado: ${valor}`;
+    }
+
+    // -------- FUNCIÓN PRINCIPAL (adivinar) --------
+    function adivinar(pregunta = '') {
+        if (animacionDadoActiva) return;
+
+        animarDado(() => {
+            const dado = Math.floor(Math.random() * 6) + 1;
+            mostrarDadoFinal(dado);
+
+            // Elegir respuesta (par = positiva, impar = negativa/ácida)
+            let indiceRespuesta;
+            if (dado % 2 === 0) {
+                // Respuestas positivas (primeras 8)
+                indiceRespuesta = Math.floor(Math.random() * 8);
+            } else {
+                // Respuestas negativas/ácidas (de la 8 a la 16)
+                indiceRespuesta = 8 + Math.floor(Math.random() * 8);
+            }
+
+            let respuesta = respuestas[indiceRespuesta];
+
+            // Si la pregunta tiene múltiplo de 3 letras → chiste extra
+            const letrasLimpias = pregunta.replace(/\s/g, '').length;
+            if (letrasLimpias > 0 && letrasLimpias % 3 === 0) {
+                respuesta += chistesBonus[Math.floor(Math.random() * chistesBonus.length)];
+            }
+
+            // Añadir un toque extra si la pregunta es muy larga
+            if (letrasLimpias > 30) {
+                respuesta += ' 📢 (Y ya que preguntas tanto, el chancho te sugiere hacer un resumen ejecutivo.)';
+            }
+
+            respuestaEl.innerHTML = `🐷 ${respuesta}`;
+            contador++;
+            contadorSpan.textContent = `🐽 ${contador} preguntas`;
+
+            chancho.style.transform = 'scale(0.85) rotate(-8deg)';
+            setTimeout(() => {
+                chancho.style.transform = 'scale(1) rotate(-2deg)';
+            }, 200);
+
+            document.querySelector('h1 small').textContent = '〰️ ✨ adivinando... ✨ 〰️';
+            setTimeout(() => {
+                document.querySelector('h1 small').textContent = '〰️ MÍSTICO 〰️';
+            }, 800);
+        });
+    }
+
+    // -------- MODO SNACK (USA EL INPUT) --------
+    function modoSnack() {
+        if (animacionDadoActiva) return;
+
+        const palabraUsuario = inputPregunta.value.trim();
+        
+        if (palabraUsuario === '') {
+            respuestaEl.innerHTML = '🐷 ¡Escribe una palabra en el cuadro primero! (ej: pizza, amor, dinero) Y no te hagas el tonto.';
+            inputPregunta.focus();
+            return;
+        }
+
+        const palabraLower = palabraUsuario.toLowerCase();
+        const snackEncontrado = snacks.find(s => s.palabra === palabraLower);
+
+        animarDado(() => {
+            const dado = Math.floor(Math.random() * 6) + 1;
+            mostrarDadoFinal(dado);
+
+            if (snackEncontrado) {
+                respuestaEl.innerHTML = `🍽️ ${snackEncontrado.texto}`;
+            } else {
+                const respuestasRandom = [
+                    `"${palabraUsuario}"... El chancho no conoce esa palabra, pero suena a que necesita más salsa. Y tú a que necesitas más vida social.`,
+                    `"${palabraUsuario}" es la clave de tu destino. O solo una palabra. Quién sabe. Tú tampoco, por eso preguntas.`,
+                    `El chancho dice que "${palabraUsuario}" es el nombre de su próximo disco. Y que tú deberías ser su grupo de apertura.`,
+                    `"${palabraUsuario}"... interesante. El chancho lo anotó en su libreta de secretos. Que es igual a su libreta de compras.`,
+                    `El chancho olfateó "${palabraUsuario}" y dijo: "Tiene potencial, pero le falta tocino. Como tu vida."`,
+                    `"${palabraUsuario}" no está en el diccionario del chancho. Pero le gusta cómo suena. Como tu desesperación.`
+                ];
+                respuestaEl.innerHTML = `🐷 ${respuestasRandom[Math.floor(Math.random() * respuestasRandom.length)]}`;
+            }
+
+            contador++;
+            contadorSpan.textContent = `🐽 ${contador} preguntas`;
+            
+            inputPregunta.value = '';
+        });
+    }
+
+    // -------- MODO ADIVINAR EDAD (con respuestas ácidas) --------
+    function adivinarEdad() {
+        if (animacionDadoActiva) return;
+
+        animarDado(() => {
+            const edadAleatoria = Math.floor(Math.random() * 99) + 1;
+            const dado = Math.floor(Math.random() * 6) + 1;
+            mostrarDadoFinal(dado);
+
+            const comentarios = [
+                `¿Casi le atino? No mientas, que el chancho ve tus búsquedas de Google. Y también tu historial de Netflix.`,
+                `El chancho dice que tienes ${edadAleatoria} años... pero en años cerdo eso son 7. Y en años de inteligencia, 3.`,
+                `Tu edad es ${edadAleatoria}... ¡pero tu espíritu es de 12! (o de 80, según el día. Y según tu nivel de quejas.)`,
+                `${edadAleatoria} años. El chancho lo sabía porque tu pregunta olía a añejo. Como tu sentido del humor.`,
+                `🎯 El chancho acertó: ${edadAleatoria} años. (O no, pero él lo cree. Y tú también deberías, para variar.)`,
+                `📅 ${edadAleatoria} años. El chancho usó su poder místico (y un poco de azar). Igual que tú usas tu suerte para sobrevivir.`,
+                `🤔 ${edadAleatoria} años... el chancho pensó que eras más joven. O más viejo. Realmente no le importa.`,
+                `🎂 ${edadAleatoria} años. El chancho recomienda un pastel. Y un espejo para que veas que no envejeces bien.`
+            ];
+            const comentario = comentarios[Math.floor(Math.random() * comentarios.length)];
+            respuestaEl.innerHTML = `🎂 ${edadAleatoria} años. ${comentario}`;
+
+            contador++;
+            contadorSpan.textContent = `🐽 ${contador} preguntas`;
+        });
+    }
+
+    // -------- GUIÓN DE LA GUÍA SNACK --------
+    function toggleGuia() {
+        guiaSnack.classList.toggle('visible');
+        if (guiaSnack.classList.contains('visible')) {
+            setTimeout(() => {
+                guiaSnack.classList.remove('visible');
+            }, 20000);
+        }
+    }
+
+    // -------- EVENTOS --------
+    btnPreguntar.addEventListener('click', () => {
+        const pregunta = inputPregunta.value.trim();
+        if (pregunta === '') {
+            respuestaEl.innerHTML = '🐷 ¡OH, MORTAL! Escribe algo, ni el chancho lee mentes (todavía). Y tu mente no es tan interesante.';
+            return;
+        }
+        adivinar(pregunta);
+        inputPregunta.value = '';
+        inputPregunta.focus();
+    });
+
+    inputPregunta.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            btnPreguntar.click();
+        }
+    });
+
+    btnSnack.addEventListener('click', modoSnack);
+    btnEdad.addEventListener('click', adivinarEdad);
+
+    btnAyudaSnack.addEventListener('click', toggleGuia);
+    cerrarGuia.addEventListener('click', () => {
+        guiaSnack.classList.remove('visible');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (guiaSnack.classList.contains('visible')) {
+            const estaEnGuia = guiaSnack.contains(e.target);
+            const esBotonAyuda = btnAyudaSnack.contains(e.target);
+            if (!estaEnGuia && !esBotonAyuda) {
+                guiaSnack.classList.remove('visible');
+            }
+        }
+    });
+
+    // -------- SALUDO INICIAL --------
+    window.addEventListener('load', () => {
+        respuestaEl.innerHTML = '✨ El chancho ha despertado. Escribe algo... si te atreves. ✨';
+        mostrarDadoFinal(1);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🐷 El Oráculo del Chancho Místico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #1a0e0b 0%, #2d1810 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: linear-gradient(180deg, #3d231b, #2a1610);
+            border-radius: 60px 60px 40px 40px;
+            padding: 30px 25px 40px;
+            max-width: 720px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 0 0 2px #6b3f2e, inset 0 0 20px #ac6b4f;
+            border: 4px solid #7a4d38;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f7e3c0;
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-shadow: 0 4px 0 #4f2e1e, 0 8px 12px rgba(0, 0, 0, 0.6);
+        }
+        h1 small {
+            display: block;
+            font-size: 0.8rem;
+            color: #dbbd94;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        /* ============================================================
+           🆕 PANEL COLAPSABLE - CONFIGURACIÓN DE IA
+           ============================================================ */
+        .config-wrapper {
+            margin: 15px 0;
+        }
+
+        /* Botón toggle */
+        .toggle-config-btn {
+            background: linear-gradient(135deg, #2a5a3a, #1a3a2a);
+            border: 2px solid #4aaa7a;
+            color: #90d0a0;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            box-shadow: 0 4px 0 #1a2a1a;
+            width: fit-content;
+        }
+
+        .toggle-config-btn:hover {
+            background: linear-gradient(135deg, #3a7a4a, #2a5a3a);
+            transform: scale(1.02);
+        }
+
+        .toggle-config-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #1a2a1a;
+        }
+
+        .toggle-config-btn .icono {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .toggle-config-btn .icono.abierto {
+            transform: rotate(180deg);
+        }
+
+        /* Panel de configuración (colapsable) */
+        .config-panel {
+            background: linear-gradient(135deg, #0a1a2a, #0d2a1d);
+            border: 3px solid #4aaa7a;
+            border-radius: 30px;
+            padding: 20px 18px;
+            margin-top: 12px;
+            box-shadow: 0 0 30px rgba(60, 180, 120, 0.15), inset 0 0 30px #0a0604;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            padding: 0 18px;
+            transition: max-height 0.5s ease, opacity 0.4s ease, padding 0.4s ease;
+        }
+
+        .config-panel.abierto {
+            max-height: 800px;
+            opacity: 1;
+            padding: 20px 18px;
+        }
+
+        .config-panel .titulo-config {
+            color: #80d4a0;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .config-panel .titulo-config .badge-gratis {
+            background: #1a4a2a;
+            color: #90ee90;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            border: 1px solid #2a7a3a;
+        }
+
+        .config-panel .titulo-config .badge-google {
+            background: #1a2a4a;
+            color: #80b0ff;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            border: 1px solid #3a6aaa;
+        }
+
+        .config-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .config-row input {
+            flex: 1;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 60px;
+            background: #1f110c;
+            color: #f7e3c0;
+            font-size: 1rem;
+            outline: 3px solid #5d3828;
+            box-shadow: inset 0 4px 8px #0d0704;
+            min-width: 180px;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .config-row input:focus {
+            outline: 3px solid #4aaa7a;
+            background: #0d2a1d;
+        }
+
+        .config-row input::placeholder {
+            color: #6a5a6a;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 0;
+        }
+
+        .btn-config {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 6px 0 #1a3a2a, 0 8px 16px rgba(0, 0, 0, 0.3);
+            color: #f7e3c0;
+            background: #2a7a5a;
+            border: 2px solid #4aaa7a;
+            text-shadow: 0 1px 0 #1a3a2a;
+            flex: 0 0 auto;
+        }
+
+        .btn-config:hover {
+            background: #3a9a6a;
+            transform: scale(1.02);
+        }
+
+        .btn-config:active {
+            transform: translateY(5px);
+            box-shadow: 0 1px 0 #1a3a2a;
+        }
+
+        .estado-ia {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: #1f110c;
+            border-radius: 30px;
+            border: 2px solid #2a4a3a;
+            flex-wrap: wrap;
+        }
+
+        .estado-ia .indicador {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #bb9a82;
+        }
+
+        .estado-ia .indicador .luz {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .luz.rojo { background: #ff4444; box-shadow: 0 0 10px #ff444488; }
+        .luz.verde { background: #44ff44; box-shadow: 0 0 10px #44ff4488; }
+        .luz.amarillo { background: #ffaa44; box-shadow: 0 0 10px #ffaa4488; }
+
+        .estado-ia .info-token {
+            color: #6a5a6a;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .estado-ia .info-token a {
+            color: #4aaa7a;
+            text-decoration: none;
+        }
+
+        .estado-ia .info-token a:hover {
+            text-decoration: underline;
+        }
+
+        .consejo {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: #0a1a0a;
+            border-radius: 16px;
+            border: 1px solid #2a5a3a;
+            font-size: 0.85rem;
+            color: #90d0a0;
+        }
+
+        .consejo a {
+            color: #4aaa7a;
+            text-decoration: none;
+        }
+
+        .consejo a:hover {
+            text-decoration: underline;
+        }
+
+        .consejo .nuevo-format {
+            background: #1a2a1a;
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 1px solid #4aaa7a;
+            font-weight: 700;
+            color: #80d4a0;
+        }
+
+        .modelo-badge {
+            background: #1a2a4a;
+            color: #80b0ff;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            border: 1px solid #3a6aaa;
+        }
+
+        /* ===== CHANCHO ===== */
+        .chancho-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0 10px;
+            position: relative;
+        }
+        .chancho {
+            font-size: 120px;
+            line-height: 1;
+            filter: drop-shadow(0 12px 0 #3d1f14) drop-shadow(0 20px 20px rgba(0, 0, 0, 0.5));
+            background: radial-gradient(circle at 30% 30%, #f7b28c, #d47a5a);
+            border-radius: 50%;
+            padding: 25px 35px 15px 35px;
+            border: 6px solid #a56548;
+            box-shadow: inset 0 -10px 0 #7a4a33, inset 0 10px 20px #ffd9b0;
+            transform: rotate(-2deg);
+            animation: flotar 3s ease-in-out infinite;
+            user-select: none;
+        }
+        @keyframes flotar {
+            0% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(-2deg); }
+        }
+        .gloria {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 120, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulsar 2.5s ease-in-out infinite;
+        }
+        @keyframes pulsar {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.3; }
+        }
+
+        /* ===== DADO ===== */
+        .dado-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px 0 10px;
+            min-height: 70px;
+        }
+        .dado-grande {
+            font-size: 60px;
+            background: #1f110c;
+            padding: 8px 24px;
+            border-radius: 20px;
+            border: 4px solid #7a4d38;
+            box-shadow: inset 0 0 20px #0a0604, 0 6px 0 #3d2014;
+            display: inline-block;
+            color: #f7e3c0;
+            font-weight: 900;
+            min-width: 80px;
+            text-align: center;
+        }
+        .dado-girando {
+            animation: girarDado 0.15s infinite alternate;
+        }
+        @keyframes girarDado {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            75% { transform: rotate(270deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        /* ============================================================
+           RESPUESTA
+           ============================================================ */
+        .respuesta-box {
+            background: #1f110c;
+            border-radius: 40px;
+            padding: 24px 22px;
+            margin: 12px 0 18px;
+            border: 3px solid #7a4d38;
+            box-shadow: inset 0 0 30px #0a0604, 0 8px 0 #3d2014;
+            min-height: 200px;
+            max-height: 500px;
+            overflow-y: auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            text-align: center;
+            transition: min-height 0.3s ease;
+        }
+
+        .respuesta-box::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .respuesta-box::-webkit-scrollbar-track {
+            background: #1f110c;
+            border-radius: 10px;
+        }
+
+        .respuesta-box::-webkit-scrollbar-thumb {
+            background: #a56548;
+            border-radius: 10px;
+            border: 2px solid #7a4d38;
+        }
+
+        .respuesta-box::-webkit-scrollbar-thumb:hover {
+            background: #c2825e;
+        }
+
+        .respuesta-box {
+            scrollbar-width: thin;
+            scrollbar-color: #a56548 #1f110c;
+        }
+
+        #respuesta {
+            color: #f7e3c0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.7;
+            text-shadow: 0 2px 4px #00000080;
+            word-break: break-word;
+            white-space: pre-wrap;
+            width: 100%;
+            padding: 4px 0;
+        }
+
+        /* ===== INPUT Y BOTONES ===== */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 5px;
+        }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        #preguntaInput {
+            flex: 1;
+            padding: 16px 18px;
+            border: none;
+            border-radius: 60px;
+            background: #2f1a12;
+            color: #f7e3c0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            outline: 3px solid #5d3828;
+            box-shadow: inset 0 4px 8px #0d0704;
+            min-width: 150px;
+        }
+        #preguntaInput:focus {
+            outline: 3px solid #c2825e;
+            background: #3d241b;
+        }
+        #preguntaInput::placeholder {
+            color: #9a7a66;
+            font-weight: 300;
+        }
+
+        .btn {
+            padding: 16px 28px;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 6px 0 #2d1610, 0 8px 16px rgba(0, 0, 0, 0.3);
+            color: #1f0d07;
+            background: #ecb58a;
+            border: 2px solid #fad6b0;
+            text-shadow: 0 1px 0 #ffddbb;
+            flex: 0 0 auto;
+        }
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 1px 0 #2d1610;
+        }
+        .btn:hover {
+            background: #f7c69e;
+            transform: scale(1.02);
+        }
+        .btn-secundario {
+            background: #7a5a48;
+            border-color: #ae8a74;
+            color: #f7e3c0;
+            text-shadow: 0 1px 0 #3d2b1f;
+            box-shadow: 0 6px 0 #3d241b;
+        }
+        .btn-secundario:hover {
+            background: #946f5a;
+        }
+
+        .snack-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn-ayuda {
+            background: #4a2f22;
+            border: 2px solid #8a6a55;
+            color: #f7e3c0;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 0 #2d1610;
+        }
+        .btn-ayuda:hover {
+            background: #6b4a38;
+            transform: scale(1.1);
+        }
+        .btn-ayuda:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #2d1610;
+        }
+
+        .guia-snack {
+            display: none;
+            background: #1f110c;
+            border: 3px solid #c2825e;
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin: 10px 0 5px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), inset 0 0 30px #0a0604;
+            color: #f7e3c0;
+            animation: aparecerGuia 0.3s ease-out;
+        }
+        .guia-snack.visible {
+            display: block;
+        }
+        @keyframes aparecerGuia {
+            0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .guia-snack h3 {
+            color: #f7dcc0;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .guia-snack ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0;
+        }
+        .guia-snack li {
+            padding: 6px 0;
+            border-bottom: 1px solid #3d241b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .guia-snack li:last-child {
+            border-bottom: none;
+        }
+        .guia-snack .ejemplo {
+            background: #2d1810;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            color: #ffdbb5;
+            border: 1px solid #5d3828;
+        }
+        .guia-snack .paso {
+            background: #3d241b;
+            padding: 8px 14px;
+            border-radius: 12px;
+            margin: 8px 0;
+            border-left: 4px solid #c2825e;
+            color: #ffdbb5;
+        }
+        .guia-snack .cerrar-guia {
+            background: #5d3828;
+            border: none;
+            color: #f7e3c0;
+            padding: 4px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        .guia-snack .cerrar-guia:hover {
+            background: #7a4d38;
+        }
+
+        .estado-inferior {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 18px 5px 0;
+            color: #bb9a82;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            border-top: 2px dashed #5d3828;
+            padding-top: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .estado-inferior span {
+            background: #1f110c;
+            padding: 6px 16px;
+            border-radius: 40px;
+            border: 2px solid #5d3828;
+            color: #f7dcc0;
+        }
+
+        /* ============================================================
+           📱 RESPONSIVE
+           ============================================================ */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 16px 30px;
+                border-radius: 40px 40px 30px 30px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+            h1 small {
+                font-size: 0.7rem;
+            }
+
+            .chancho {
+                font-size: 80px;
+                padding: 15px 20px 10px;
+            }
+
+            .dado-grande {
+                font-size: 40px;
+                min-width: 60px;
+                padding: 6px 16px;
+            }
+
+            .respuesta-box {
+                min-height: 180px;
+                max-height: 400px;
+                padding: 18px 16px;
+                border-radius: 30px;
+            }
+
+            #respuesta {
+                font-size: 1.1rem;
+                line-height: 1.5;
+            }
+
+            .btn {
+                padding: 12px 18px;
+                font-size: 1rem;
+            }
+
+            #preguntaInput {
+                padding: 12px 14px;
+                font-size: 1rem;
+                min-width: 120px;
+            }
+
+            .config-row input {
+                padding: 12px 14px;
+                font-size: 0.9rem;
+                min-width: 140px;
+            }
+
+            .btn-config {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+
+            .estado-ia .info-token {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .config-panel {
+                padding: 14px 14px;
+                border-radius: 20px;
+            }
+
+            .config-panel .titulo-config {
+                font-size: 0.85rem;
+            }
+
+            .consejo {
+                font-size: 0.75rem;
+                padding: 8px 12px;
+            }
+
+            .estado-inferior {
+                font-size: 0.75rem;
+                gap: 6px;
+            }
+
+            .estado-inferior span {
+                padding: 4px 12px;
+                font-size: 0.7rem;
+            }
+
+            .guia-snack {
+                padding: 14px 16px;
+            }
+
+            .guia-snack h3 {
+                font-size: 1rem;
+            }
+
+            .guia-snack .paso {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+
+            .guia-snack li {
+                font-size: 0.85rem;
+                padding: 4px 0;
+            }
+
+            .toggle-config-btn {
+                font-size: 0.8rem;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 14px 12px 24px;
+                border-radius: 30px 30px 20px 20px;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            .chancho {
+                font-size: 60px;
+                padding: 10px 14px 8px;
+            }
+
+            .respuesta-box {
+                min-height: 150px;
+                max-height: 350px;
+                padding: 14px 12px;
+                border-radius: 24px;
+            }
+
+            #respuesta {
+                font-size: 0.95rem;
+                line-height: 1.4;
+            }
+
+            .btn {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+
+            #preguntaInput {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+
+            .config-row input {
+                padding: 10px 12px;
+                font-size: 0.8rem;
+                min-width: 120px;
+            }
+
+            .btn-config {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+
+            .estado-ia .indicador {
+                font-size: 0.75rem;
+            }
+
+            .dado-grande {
+                font-size: 32px;
+                min-width: 50px;
+                padding: 4px 12px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 780px;
+                padding: 40px 35px 50px;
+            }
+
+            .respuesta-box {
+                min-height: 250px;
+                max-height: 550px;
+                padding: 28px 26px;
+            }
+
+            #respuesta {
+                font-size: 1.5rem;
+                line-height: 1.8;
+            }
+
+            .chancho {
+                font-size: 140px;
+                padding: 30px 40px 18px;
+            }
+
+            .dado-grande {
+                font-size: 70px;
+                min-width: 100px;
+                padding: 10px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>
+        🐷 ORÁCULO DEL CHANCHO
+        <small>〰️ MÍSTICO (con Gemini IA) 〰️</small>
+    </h1>
+
+    <!-- ============================================================
+         🆕 PANEL COLAPSABLE - CONFIGURACIÓN DE IA
+         ============================================================ -->
+    <div class="config-wrapper">
+        <!-- Botón para mostrar/ocultar configuración -->
+        <button class="toggle-config-btn" id="toggleConfigBtn">
+            <span>⚙️</span>
+            <span id="toggleConfigText">Mostrar configuración de IA</span>
+            <span class="icono" id="toggleConfigIcon">▼</span>
+        </button>
+
+        <!-- Panel de configuración (colapsable) -->
+        <div class="config-panel" id="configPanel">
+            <div class="titulo-config">
+                🤖 CONFIGURACIÓN DE IA (Gemini)
+                <span class="badge-gratis">🎁 GRATIS</span>
+                <span class="badge-google">⚡ Google AI</span>
+                <span class="modelo-badge">🧠 gemini-2.5-flash</span>
+            </div>
+
+            <div class="config-row">
+                <input type="text" id="apiKeyInput" placeholder="Pega AQUÍ tu API Key (AIza... o AQ...)" />
+                <button class="btn-config" id="guardarKeyBtn">💾 ACTIVAR IA</button>
+            </div>
+
+            <div class="estado-ia">
+                <div class="indicador">
+                    <span class="luz rojo" id="luzIA"></span>
+                    <span id="estadoText">⛔ IA: Desactivada</span>
+                </div>
+                <div class="info-token">
+                    🔑 <a href="https://aistudio.google.com/apikey" target="_blank">Consigue tu API Key GRATIS aquí</a>
+                </div>
+            </div>
+
+            <div class="consejo">
+                💡 <strong>Gemini funciona SIEMPRE, sin errores de DNS.</strong> 
+                Ve a <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>, 
+                inicia sesión con tu cuenta Google y crea una API Key.
+                <br><br>
+                <span class="nuevo-format">🔑 NUEVO FORMATO</span> Ahora Google genera claves que empiezan con <strong>AQ</strong> (no AIza). 
+                ¡El Chancho ya acepta ambos formatos!
+                <br><br>
+                ⚡ <strong>Modelo actualizado:</strong> usando <strong>gemini-2.5-flash</strong> (el más rápido)
+                <br><br>
+                🎯 <strong>Prompt mejorado:</strong> respuestas COMPLETAS y equilibradas (3-5 oraciones)
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CHANCHO ===== -->
+    <div class="chancho-wrapper">
+        <div class="gloria"></div>
+        <div class="chancho" id="chanchoEmoji">🐖</div>
+    </div>
+
+    <!-- ===== DADO ===== -->
+    <div class="dado-container">
+        <div class="dado-grande" id="dadoDisplay">🎲</div>
+    </div>
+
+    <!-- ===== RESPUESTA ===== -->
+    <div class="respuesta-box" id="respuestaBox">
+        <div id="respuesta">✨ Pregúntame algo, humano... (activa la IA arriba) ✨</div>
+    </div>
+
+    <!-- ===== INPUT Y BOTONES ===== -->
+    <div class="input-area">
+        <div class="input-row">
+            <input type="text" id="preguntaInput" placeholder="Escribe tu pregunta o palabra mágica..." />
+            <button class="btn" id="btnPreguntar">🔮 PREGUNTAR</button>
+        </div>
+
+        <div class="input-row" style="justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <div class="snack-wrapper">
+                <button class="btn btn-secundario" id="btnSnack">🍕 SNACK</button>
+                <button class="btn-ayuda" id="btnAyudaSnack" title="¿Cómo funciona el SNACK?">❓</button>
+            </div>
+            <button class="btn btn-secundario" id="btnEdad">🎂 ADIVINA MI EDAD</button>
+        </div>
+
+        <!-- GUÍA SNACK -->
+        <div class="guia-snack" id="guiaSnack">
+            <h3>🍕 ¿Cómo funciona el botón SNACK?</h3>
+            <div class="paso"><strong>📝 PASO 1:</strong> Escribe una palabra en el cuadro de arriba.</div>
+            <div class="paso"><strong>👉 PASO 2:</strong> Haz clic en <strong>"🍕 SNACK"</strong>.</div>
+            <div class="paso"><strong>✨ PASO 3:</strong> ¡El chancho te dará un horóscopo personalizado!</div>
+            <p style="margin: 12px 0 8px; color: #dbbd94;"><strong>Palabras mágicas:</strong></p>
+            <ul>
+                <li><span class="ejemplo">pizza</span> 🍕</li>
+                <li><span class="ejemplo">amor</span> ❤️</li>
+                <li><span class="ejemplo">dinero</span> 💰</li>
+                <li><span class="ejemplo">viaje</span> ✈️</li>
+                <li><span class="ejemplo">tristeza</span> 😢</li>
+                <li><span class="ejemplo">patata</span> 🥔</li>
+                <li><span class="ejemplo">trabajo</span> 💼</li>
+                <li><span class="ejemplo">chancho</span> o <span class="ejemplo">cerdo</span> 🐷</li>
+            </ul>
+            <button class="cerrar-guia" id="cerrarGuia">✖ Entendido</button>
+        </div>
+    </div>
+
+    <!-- ===== ESTADO INFERIOR ===== -->
+    <div class="estado-inferior">
+        <span id="contadorPreguntas">🐽 0 preguntas</span>
+        <span id="ultimoDado">🎲 Dado: -</span>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    //  🐷  ORÁCULO DEL CHANCHO MÍSTICO - PANEL COLAPSABLE
+    //  ✅ maxOutputTokens: 800
+    //  ✅ Prompt: 3-5 oraciones (equilibrado)
+    //  ✅ Panel de configuración oculto por defecto
+    // ============================================================
+
+    // -------- ELEMENTOS DOM --------
+    const respuestaEl = document.getElementById('respuesta');
+    const respuestaBox = document.getElementById('respuestaBox');
+    const inputPregunta = document.getElementById('preguntaInput');
+    const btnPreguntar = document.getElementById('btnPreguntar');
+    const btnSnack = document.getElementById('btnSnack');
+    const btnEdad = document.getElementById('btnEdad');
+    const contadorSpan = document.getElementById('contadorPreguntas');
+    const dadoSpan = document.getElementById('ultimoDado');
+    const dadoDisplay = document.getElementById('dadoDisplay');
+    const chancho = document.getElementById('chanchoEmoji');
+    const guiaSnack = document.getElementById('guiaSnack');
+    const btnAyudaSnack = document.getElementById('btnAyudaSnack');
+    const cerrarGuia = document.getElementById('cerrarGuia');
+
+    // Elementos de configuración
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const guardarKeyBtn = document.getElementById('guardarKeyBtn');
+    const luzIA = document.getElementById('luzIA');
+    const estadoText = document.getElementById('estadoText');
+
+    // Elementos del panel colapsable
+    const toggleConfigBtn = document.getElementById('toggleConfigBtn');
+    const toggleConfigText = document.getElementById('toggleConfigText');
+    const toggleConfigIcon = document.getElementById('toggleConfigIcon');
+    const configPanel = document.getElementById('configPanel');
+
+    // -------- ESTADO --------
+    let contador = 0;
+    let ultimoDado = null;
+    let animacionDadoActiva = false;
+    let apiKey = localStorage.getItem('gemini_key') || '';
+    let panelAbierto = false;
+
+    // -------- FUNCIÓN: TOGGLE PANEL --------
+    function toggleConfigPanel() {
+        panelAbierto = !panelAbierto;
+        configPanel.classList.toggle('abierto', panelAbierto);
+        toggleConfigText.textContent = panelAbierto ? 'Ocultar configuración de IA' : 'Mostrar configuración de IA';
+        toggleConfigIcon.classList.toggle('abierto', panelAbierto);
+        
+        // Guardar estado en localStorage
+        localStorage.setItem('panel_config_abierto', panelAbierto ? 'true' : 'false');
+    }
+
+    // -------- FUNCIÓN: CARGAR ESTADO DEL PANEL --------
+    function cargarEstadoPanel() {
+        const guardado = localStorage.getItem('panel_config_abierto');
+        if (guardado === 'true') {
+            panelAbierto = true;
+            configPanel.classList.add('abierto');
+            toggleConfigText.textContent = 'Ocultar configuración de IA';
+            toggleConfigIcon.classList.add('abierto');
+        }
+    }
+
+    // -------- ACTUALIZAR ESTADO IA --------
+    function actualizarEstadoIA(activo, mensaje = '') {
+        if (activo) {
+            luzIA.className = 'luz verde';
+            estadoText.textContent = mensaje || '✅ IA Activada (Gemini 2.5 Flash)';
+        } else {
+            luzIA.className = 'luz rojo';
+            estadoText.textContent = mensaje || '⛔ IA: Desactivada';
+        }
+    }
+
+    // -------- RESPUESTAS FALLBACK (locales) --------
+    const respuestasFallback = [
+        "El cosmos dice SÍ, pero tu nevera dice NO. Ve a comer algo, gordito.",
+        "NO. Y además, el chancho te juzga silenciosamente por hacer esa pregunta.",
+        "Estadísticamente, 1 de cada 3 personas hace esta pregunta. Eres básico.",
+        "El chancho giró su cola y dijo: 'Pregúntame otra cosa, pero con más estilo'.",
+        "Sí, pero tendrás que cambiar tu nombre a 'Rodolfo' para que funcione.",
+        "NO rotundo. El chancho ha visto mejores preguntas en un cubo de basura.",
+        "El chancho dice SÍ... pero también dice que deberías bañarte más seguido.",
+        "Tu pregunta es tan confusa como tu vida amorosa. El chancho lo sabe todo.",
+        "El chancho no entiende tu pregunta, pero te recomienda comer menos carbohidratos.",
+        "La respuesta es 42. Pero no a tu pregunta. A la vida en general. De nada."
+    ];
+
+    const snacksFallback = [
+        { palabra: 'pizza', texto: '🍕 Hoy la pizza te acompaña en la sombra. Cuidado con los bordes quemados... como tu cerebro.' },
+        { palabra: 'amor', texto: '❤️ El amor es como un chancho: gruñe, pero al final da calor.' },
+        { palabra: 'dinero', texto: '💰 El dinero no da la felicidad, pero compra snacks. El chancho lo sabe.' },
+        { palabra: 'viaje', texto: '✈️ Viajar es bueno, pero ningún destino supera la panza del chancho.' },
+        { palabra: 'tristeza', texto: '😢 La tristeza es como un globo: si lo pinchas con una sonrisa, explota.' },
+        { palabra: 'patata', texto: '🥔 La patata te observa desde el suelo. Hoy es buen día para ser frito.' },
+        { palabra: 'trabajo', texto: '💼 El trabajo es temporal, el chancho es eterno. Haz pausas para mirar memes.' },
+        { palabra: 'chancho', texto: '🐷 Te han invocado, humano. El chancho te observa con aprobación.' },
+        { palabra: 'cerdo', texto: '🐽 Ah, un clásico. El cerdo te sonríe desde el más allá del tocino.' }
+    ];
+
+    // ============================================================
+    //  🎯 FUNCIÓN: LLAMAR A GEMINI
+    // ============================================================
+    async function llamarGemini(prompt, esSnack = false, palabra = '') {
+        if (!apiKey) {
+            return null;
+        }
+
+        try {
+            let systemPrompt = '';
+            let userPrompt = '';
+
+            if (esSnack) {
+                systemPrompt = `Eres el "Oráculo del Chancho Místico", un cerdo sabio, sarcástico y con humor negro.
+
+                INSTRUCCIONES IMPORTANTES:
+                1. RESPUESTA DIRECTA: Relacionada con la palabra "${palabra}".
+                2. LONGITUD: 3-4 oraciones (ni muy larga ni muy corta).
+                3. COMPLETA: Termina la respuesta con un punto final.
+                4. Usa la palabra "${palabra}" en tu respuesta.
+                5. PROHIBIDO: respuestas genéricas o que no mencionen la palabra.
+                6. PROHIBIDO: respuestas cortadas o incompletas.
+
+                EJEMPLO BUENO:
+                "¡Ah, la pizza! El chancho ve que hoy la pizza te acompañará en la sombra. Cuidado con los bordes quemados, como tu vida amorosa. La suerte viene con pepperoni, así que pide una extra grande. 🍕"
+
+                EJEMPLO MALO (PROHIBIDO):
+                "El universo te sonríe." (Genérico y no menciona la palabra)`;
+
+                userPrompt = `Humano, dame un horóscopo específico para la palabra "${palabra}". ¡Conecta ESA palabra con mi destino! 🐷`;
+
+            } else {
+                systemPrompt = `Eres el "Oráculo del Chancho Místico", un ser ancestral en forma de cerdo.
+
+                REGLAS ESTRICTAS:
+                1. RESPUESTA DIRECTA: Responde DIRECTAMENTE a la pregunta del usuario.
+                2. PREGUNTA: "${prompt}" - tu respuesta debe girar en torno a ESTA pregunta.
+                3. LONGITUD: 3-5 oraciones (equilibrado, ni muy largo ni muy corto).
+                4. COMPLETA: Termina la respuesta con un punto final. NO cortes la respuesta.
+                5. EVITA: respuestas genéricas que podrían aplicarse a cualquier cosa.
+                6. MANTÉN: humor, sarcasmo y personalidad del chancho.
+                7. USA: emojis de cerdos 🐷🐽 ocasionalmente.
+
+                EJEMPLO BUENO (pregunta: "¿Me das un abrazo?"):
+                "¡Oh, humano necesitado de afecto! El Chancho Místico te ofrece un abrazo de cerdo... pero solo si no me manchas con tus lágrimas. 🐷 Ven aquí, pero sin apretar que mi pancita aún digiere la cena. Dale, un abrazo rápido."
+
+                EJEMPLO MALO (PROHIBIDO):
+                "Sí." (Demasiado corto y no completo)
+
+                Ahora responde a ESTA pregunta específica del humano: "${prompt}"`;
+
+                userPrompt = `Humano, el chancho te escucha. He leído tu pregunta: "${prompt}". Dame una respuesta DIRECTA y COMPLETA a ESA pregunta específica. 🐷`;
+            }
+
+            const response = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [
+                                { text: systemPrompt + '\n\n' + userPrompt }
+                            ]
+                        }],
+                        generationConfig: {
+                            temperature: 0.85,
+                            maxOutputTokens: 800,
+                            topP: 0.95,
+                            topK: 40,
+                            stopSequences: []
+                        }
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error Gemini:', errorData);
+                
+                if (response.status === 404) {
+                    console.log('Probando con gemini-2.0-flash...');
+                    const response2 = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: systemPrompt + '\n\n' + userPrompt }] }],
+                                generationConfig: { temperature: 0.85, maxOutputTokens: 800, topP: 0.95 }
+                            })
+                        }
+                    );
+                    if (response2.ok) {
+                        const data2 = await response2.json();
+                        if (data2 && data2.candidates && data2.candidates[0] && data2.candidates[0].content) {
+                            const texto2 = data2.candidates[0].content.parts[0].text;
+                            if (texto2 && texto2.length > 10) {
+                                return texto2;
+                            }
+                        }
+                    }
+                    return null;
+                }
+
+                if (response.status === 403 || response.status === 401) {
+                    localStorage.removeItem('gemini_key');
+                    apiKey = '';
+                    actualizarEstadoIA(false, '⛔ API Key inválida');
+                    respuestaEl.innerHTML = '❌ API Key inválida. Consigue una nueva en aistudio.google.com/apikey';
+                    return null;
+                }
+                return null;
+            }
+
+            const data = await response.json();
+            
+            if (data && data.candidates && data.candidates[0] && data.candidates[0].content) {
+                let texto = data.candidates[0].content.parts[0].text;
+                if (texto && texto.length > 10) {
+                    if (!texto.endsWith('.') && !texto.endsWith('!') && !texto.endsWith('?')) {
+                        texto += '... ¡Y eso es todo lo que el chancho tiene que decir! 🐷';
+                    }
+                    return texto;
+                }
+            }
+            return null;
+
+        } catch (error) {
+            console.error('Error en llamada Gemini:', error);
+            return null;
+        }
+    }
+
+    // -------- FUNCIÓN PARA ANIMAR EL DADO --------
+    function animarDado(callback) {
+        if (animacionDadoActiva) return;
+        animacionDadoActiva = true;
+
+        const carasDado = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        let vueltas = 0;
+        const maxVueltas = 12;
+        const intervalo = 100;
+
+        const intervalId = setInterval(() => {
+            const caraAleatoria = carasDado[Math.floor(Math.random() * carasDado.length)];
+            dadoDisplay.textContent = caraAleatoria;
+            dadoDisplay.classList.add('dado-girando');
+            vueltas++;
+
+            if (vueltas >= maxVueltas) {
+                clearInterval(intervalId);
+                dadoDisplay.classList.remove('dado-girando');
+                animacionDadoActiva = false;
+                if (callback) callback();
+            }
+        }, intervalo);
+    }
+
+    function mostrarDadoFinal(valor) {
+        const carasDado = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        dadoDisplay.textContent = carasDado[valor - 1] || '🎲';
+        ultimoDado = valor;
+        dadoSpan.textContent = `🎲 Dado: ${valor}`;
+    }
+
+    // -------- FUNCIÓN: AUTO AJUSTAR ALTURA --------
+    function ajustarAlturaRespuesta() {
+        if (respuestaEl && respuestaBox) {
+            const altura = respuestaEl.scrollHeight;
+            if (altura > 100) {
+                const nuevaAltura = Math.min(altura + 40, 550);
+                respuestaBox.style.minHeight = Math.max(nuevaAltura, 200) + 'px';
+            }
+            respuestaBox.scrollTop = respuestaBox.scrollHeight;
+        }
+    }
+
+    // -------- FUNCIÓN PRINCIPAL (adivinar) --------
+    async function adivinar(pregunta = '') {
+        if (animacionDadoActiva) return;
+
+        respuestaEl.innerHTML = '🐷 El chancho está consultando a los espíritus... 🤔';
+        ajustarAlturaRespuesta();
+
+        animarDado(async () => {
+            const dado = Math.floor(Math.random() * 6) + 1;
+            mostrarDadoFinal(dado);
+
+            let respuesta;
+
+            if (apiKey) {
+                try {
+                    const iaResponse = await llamarGemini(pregunta, false);
+                    if (iaResponse && iaResponse.length > 15) {
+                        respuesta = iaResponse;
+                    } else {
+                        const idx = Math.floor(Math.random() * respuestasFallback.length);
+                        respuesta = respuestasFallback[idx] + ' (IA no disponible)';
+                    }
+                } catch (e) {
+                    const idx = Math.floor(Math.random() * respuestasFallback.length);
+                    respuesta = respuestasFallback[idx] + ' (IA falló)';
+                }
+            } else {
+                const idx = Math.floor(Math.random() * respuestasFallback.length);
+                respuesta = respuestasFallback[idx];
+            }
+
+            respuestaEl.innerHTML = `🐷 ${respuesta}`;
+            ajustarAlturaRespuesta();
+            contador++;
+            contadorSpan.textContent = `🐽 ${contador} preguntas`;
+
+            chancho.style.transform = 'scale(0.85) rotate(-8deg)';
+            setTimeout(() => {
+                chancho.style.transform = 'scale(1) rotate(-2deg)';
+            }, 200);
+        });
+    }
+
+    // -------- MODO SNACK --------
+    async function modoSnack() {
+        if (animacionDadoActiva) return;
+
+        const palabraUsuario = inputPregunta.value.trim();
+        if (palabraUsuario === '') {
+            respuestaEl.innerHTML = '🐷 ¡Escribe una palabra en el cuadro primero! (ej: pizza, amor, dinero)';
+            ajustarAlturaRespuesta();
+            inputPregunta.focus();
+            return;
+        }
+
+        const palabraLower = palabraUsuario.toLowerCase();
+        const snackLocal = snacksFallback.find(s => s.palabra === palabraLower);
+
+        respuestaEl.innerHTML = '🍕 El chancho está oliendo tu palabra... 🐽';
+        ajustarAlturaRespuesta();
+
+        animarDado(async () => {
+            const dado = Math.floor(Math.random() * 6) + 1;
+            mostrarDadoFinal(dado);
+
+            let respuesta;
+
+            if (apiKey) {
+                try {
+                    const iaResponse = await llamarGemini('', true, palabraLower);
+                    if (iaResponse && iaResponse.length > 15) {
+                        respuesta = iaResponse;
+                    } else if (snackLocal) {
+                        respuesta = snackLocal.texto;
+                    } else {
+                        respuesta = `"${palabraUsuario}"... El chancho no conoce esa palabra.`;
+                    }
+                } catch (e) {
+                    respuesta = snackLocal ? snackLocal.texto : `"${palabraUsuario}"... interesante.`;
+                }
+            } else {
+                respuesta = snackLocal ? snackLocal.texto : `"${palabraUsuario}"... El chancho no conoce esa palabra.`;
+            }
+
+            respuestaEl.innerHTML = `🍽️ ${respuesta}`;
+            ajustarAlturaRespuesta();
+            contador++;
+            contadorSpan.textContent = `🐽 ${contador} preguntas`;
+            inputPregunta.value = '';
+        });
+    }
+
+    // -------- MODO ADIVINAR EDAD --------
+    function adivinarEdad() {
+        if (animacionDadoActiva) return;
+
+        animarDado(() => {
+            const edadAleatoria = Math.floor(Math.random() * 99) + 1;
+            const dado = Math.floor(Math.random() * 6) + 1;
+            mostrarDadoFinal(dado);
+
+            const comentarios = [
+                `¿Casi le atino? No mientas, que el chancho ve tus búsquedas de Google.`,
+                `El chancho dice que tienes ${edadAleatoria} años... pero en años cerdo eso son 7.`,
+                `Tu edad es ${edadAleatoria}... ¡pero tu espíritu es de 12! (o de 80, según el día)`,
+                `${edadAleatoria} años. El chancho lo sabía porque tu pregunta olía a añejo.`,
+                `🎯 El chancho acertó: ${edadAleatoria} años. (O no, pero él lo cree)`
+            ];
+            const comentario = comentarios[Math.floor(Math.random() * comentarios.length)];
+            respuestaEl.innerHTML = `🎂 ${edadAleatoria} años. ${comentario}`;
+            ajustarAlturaRespuesta();
+
+            contador++;
+            contadorSpan.textContent = `🐽 ${contador} preguntas`;
+        });
+    }
+
+    // -------- GUARDAR API KEY --------
+    function guardarKey() {
+        const key = apiKeyInput.value.trim();
+        
+        if (!key) {
+            respuestaEl.innerHTML = '❌ Escribe una API Key válida. Consigue una en aistudio.google.com/apikey';
+            ajustarAlturaRespuesta();
+            return;
+        }
+
+        if (!key.startsWith('AIza') && !key.startsWith('AQ')) {
+            respuestaEl.innerHTML = '❌ La API Key debe empezar con "AIza" o "AQ". Consigue una nueva en aistudio.google.com/apikey';
+            luzIA.className = 'luz rojo';
+            estadoText.textContent = '⛔ Key inválida (formato incorrecto)';
+            ajustarAlturaRespuesta();
+            return;
+        }
+
+        apiKey = key;
+        localStorage.setItem('gemini_key', key);
+        actualizarEstadoIA(true, '✅ IA Activada (Gemini 2.5 Flash)');
+        respuestaEl.innerHTML = '✅ API Key guardada. ¡El chancho ahora responde COMPLETO! 🐷✨';
+        ajustarAlturaRespuesta();
+        apiKeyInput.value = '';
+        
+        // Cerrar panel automáticamente después de guardar
+        if (panelAbierto) {
+            setTimeout(() => {
+                toggleConfigPanel();
+            }, 1000);
+        }
+    }
+
+    // -------- CARGAR KEY GUARDADA --------
+    function cargarKeyGuardada() {
+        if (apiKey) {
+            actualizarEstadoIA(true, '✅ IA Activada (Gemini 2.5 Flash)');
+            respuestaEl.innerHTML = '✨ API Key cargada. El chancho responde COMPLETO. ¡Pregúntale algo! ✨';
+        } else {
+            actualizarEstadoIA(false);
+            respuestaEl.innerHTML = '✨ Pregúntame algo, humano... (activa la IA arriba) ✨';
+        }
+        ajustarAlturaRespuesta();
+    }
+
+    // -------- GUIÓN DE LA GUÍA SNACK --------
+    function toggleGuia() {
+        guiaSnack.classList.toggle('visible');
+    }
+
+    // -------- EVENTOS --------
+    btnPreguntar.addEventListener('click', () => {
+        const pregunta = inputPregunta.value.trim();
+        if (pregunta === '') {
+            respuestaEl.innerHTML = '🐷 ¡OH, MORTAL! Escribe algo.';
+            ajustarAlturaRespuesta();
+            return;
+        }
+        adivinar(pregunta);
+        inputPregunta.value = '';
+        inputPregunta.focus();
+    });
+
+    inputPregunta.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            btnPreguntar.click();
+        }
+    });
+
+    btnSnack.addEventListener('click', modoSnack);
+    btnEdad.addEventListener('click', adivinarEdad);
+    guardarKeyBtn.addEventListener('click', guardarKey);
+
+    // Toggle del panel colapsable
+    toggleConfigBtn.addEventListener('click', toggleConfigPanel);
+
+    btnAyudaSnack.addEventListener('click', toggleGuia);
+    cerrarGuia.addEventListener('click', () => {
+        guiaSnack.classList.remove('visible');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (guiaSnack.classList.contains('visible')) {
+            const estaEnGuia = guiaSnack.contains(e.target);
+            const esBotonAyuda = btnAyudaSnack.contains(e.target);
+            if (!estaEnGuia && !esBotonAyuda) {
+                guiaSnack.classList.remove('visible');
+            }
+        }
+    });
+
+    // -------- INICIALIZAR --------
+    window.addEventListener('load', () => {
+        cargarEstadoPanel();
+        cargarKeyGuardada();
+        mostrarDadoFinal(1);
+        setTimeout(ajustarAlturaRespuesta, 200);
+    });
+
+    window.addEventListener('resize', ajustarAlturaRespuesta);
+</script>
+
+</body>
+</html>
